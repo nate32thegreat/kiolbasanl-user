@@ -27,20 +27,15 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<Profile> signUp(@Valid @RequestBody Registration reg) {
         userDetailsManager.createUser(userBuilder
-                .username(reg.getEmail())
-                .password(reg.getPassword())
-                .roles("ROLE_BLOGGER")
+                .username("test@example.com")
+                .password("test")
+                .roles("BLOGGER")
                 .build());
 
         Profile profile = new Profile();
-        profile.setFirstName(profile.getFirstName());
-        profile.setLastName(profile.getLastName());
-        profile.setEmail(profile.getEmail());
-
-//        Profile profile = new Profile();
-//        profile.setFirstName("Test");
-//        profile.setLastName("Testerton");
-//        profile.setEmail("test@example.com");
+        profile.setFirstName("Test");
+        profile.setLastName("Testerton");
+        profile.setEmail("test@example.com");
 
        return new ResponseEntity<>(profileRepository.save(profile), HttpStatus.CREATED);
     }

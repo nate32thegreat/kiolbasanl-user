@@ -1,14 +1,22 @@
 package com.cybr406.user.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -37,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
-//              .antMatchers(HttpMethod.GET, "/books", "/books/**", "/authors", "/authors/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/profiles", "/profiles/**").permitAll()
                 .anyRequest().hasAnyRole("ADMIN", "BLOGGER")
                 .and()
                 .csrf().disable()
@@ -48,6 +56,50 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
             }
         });
+
+
     }
 
+    @Autowired
+    DataSource dataSource;
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    JdbcUserDetailsManager jdbcUserDetailsManager() {
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
+    @Bean
+    User.UserBuilder userBuilder() {
+        PasswordEncoder passwordEncoder = passwordEncoder();
+        User.UserBuilder users = User.builder();
+        users.passwordEncoder(passwordEncoder::encode);
+        return users;
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        PasswordEncoder passwordEncoder = passwordEncoder();
+
+        User.UserBuilder users = User.builder();
+        users.passwordEncoder(passwordEncoder::encode);
+
+        auth
+                .jdbcAuthentication()
+                .dataSource(dataSource)
+                .withDefaultSchema()
+                .withUser(users
+                        .username("admin")
+                        .password("admin")
+                        .roles("ADMIN"));
+//            .withUser(users
+//                    .username("test@example.com")
+//                    .password("test")
+//                    .roles("BLOGGER"));
+
+    }
 }

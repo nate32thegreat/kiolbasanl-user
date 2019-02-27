@@ -23,49 +23,15 @@ public class UserConfiguration implements RepositoryRestConfigurer {
     @Autowired
     ProfileValidator profileValidator;
 
+    @Autowired
+    ProfileValidator registrationValidator;
+
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
         validatingListener.addValidator("beforeCreate", profileValidator);
         validatingListener.addValidator("beforeSave", profileValidator);
-
-    }
-
-    @Autowired
-    DataSource dataSource;
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    JdbcUserDetailsManager jdbcUserDetailsManager() {
-        return new JdbcUserDetailsManager(dataSource);
-    }
-
-    @Bean
-    User.UserBuilder userBuilder() {
-        PasswordEncoder passwordEncoder = passwordEncoder();
-        User.UserBuilder users = User.builder();
-        users.passwordEncoder(passwordEncoder::encode);
-        return users;
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        PasswordEncoder passwordEncoder = passwordEncoder();
-
-        User.UserBuilder users = User.builder();
-        users.passwordEncoder(passwordEncoder::encode);
-
-        auth
-            .jdbcAuthentication()
-            .dataSource(dataSource)
-            .withDefaultSchema()
-            .withUser(users
-                    .username("admin")
-                    .password("admin")
-                    .roles("ADMIN"));
+        validatingListener.addValidator("beforeCreate", registrationValidator);
+        validatingListener.addValidator("beforeSave", registrationValidator);
 
     }
 }

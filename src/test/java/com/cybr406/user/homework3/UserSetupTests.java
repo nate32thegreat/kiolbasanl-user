@@ -1,5 +1,6 @@
 package com.cybr406.user.homework3;
 
+import com.cybr406.user.BaseTest;
 import org.junit.Test;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.test.annotation.DirtiesContext;

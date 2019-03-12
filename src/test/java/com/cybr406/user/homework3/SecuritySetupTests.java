@@ -1,5 +1,6 @@
 package com.cybr406.user.homework3;
 
+import com.cybr406.user.BaseTest;
 import org.junit.Test;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.annotation.DirtiesContext;

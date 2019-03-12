@@ -13,4 +13,8 @@ public class AuthUtil {
     return String.format("Basic %s", encoded);
   }
   
+  public String bearerTokenAuth(String token) {
+    return String.format("Bearer %s", token);
+  }
+  
 }

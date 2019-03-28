@@ -1,6 +1,5 @@
-package com.cybr406.user.homework3;
+package com.cybr406.user;
 
-import com.cybr406.user.Profile;
 import com.cybr406.user.util.AuthUtil;
 import com.cybr406.user.util.JdbcUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,16 +26,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public abstract class BaseTest {
 
   @Autowired
-  MockMvc mockMvc;
+  protected MockMvc mockMvc;
   
   @Autowired
-  JdbcUtil jdbcUtil;
+  protected JdbcUtil jdbcUtil;
   
   @Autowired
-  ObjectMapper objectMapper;
+  protected ObjectMapper objectMapper;
 
   @Autowired
-  AuthUtil authUtil;
+  protected AuthUtil authUtil;
   
   protected ResultActions signUp(String email, String password, String firstName, String lastName) throws Exception {
     Map<String, Object> signUp = new HashMap<>();

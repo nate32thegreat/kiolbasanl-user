@@ -1,5 +1,6 @@
 package com.cybr406.user.homework3;
 
+import com.cybr406.user.BaseTest;
 import com.cybr406.user.Profile;
 import org.junit.Test;
 import org.springframework.hateoas.Resource;

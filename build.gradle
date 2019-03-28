@@ -1,13 +1,6 @@
-buildscript {
-	ext {
-		springBootVersion = '2.1.2.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	id 'org.springframework.boot' version '2.1.3.RELEASE'
+	id 'java'
 }
 
 apply plugin: 'java'
@@ -20,6 +13,11 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+	set('springCloudVersion', 'Greenwich.RELEASE')
 }
 
 dependencies {
@@ -28,19 +26,30 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 	implementation 'org.liquibase:liquibase-core'
-	
+	implementation 'org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.4'
+
+	runtimeOnly 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+	runtimeOnly 'com.sun.xml.bind:jaxb-impl:2.3.1'
+	runtimeOnly 'javax.xml.bind:jaxb-api:2.3.1'
+	runtimeOnly 'org.javassist:javassist:3.23.1-GA'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
-	
+
 	testImplementation 'org.apache.httpcomponents:httpclient'
 	testImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-
 test {
 	testLogging {
 		events "passed", "failed"
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }

@@ -57,10 +57,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+//                .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
-                .antMatchers(HttpMethod.GET, "/profiles", "/profiles/**").permitAll()
-                .anyRequest().hasAnyRole("ADMIN", "BLOGGER")
+//                .antMatchers(HttpMethod.GET, "/profiles", "/profiles/**").permitAll()
+//                .anyRequest().hasAnyRole("ADMIN", "BLOGGER")
                 .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

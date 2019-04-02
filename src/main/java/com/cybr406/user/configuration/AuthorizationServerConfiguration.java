@@ -34,9 +34,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    JdbcUserDetailsManager jdbcUserDetailsManager;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Bean
@@ -51,6 +48,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("api")
+                    .resourceIds("profile", "post")
                     .authorizedGrantTypes("password", "refresh_token")
                     .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                     .scopes("read", "write", "trust")
@@ -65,7 +63,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager);
-                //.userDetailsService(jdbcUserDetailsManager);
 
     }
 
